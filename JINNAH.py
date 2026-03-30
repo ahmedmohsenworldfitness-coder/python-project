@@ -7,6 +7,17 @@ import base64
 # ===== إعداد الصفحة =====
 st.set_page_config(page_title="جنة الهانوفيل", layout="wide")
 
+# ===== إضافة Open Graph meta tags للمعاينة =====
+# استبدل URL الصورة بالرابط المباشر لصورتك على الإنترنت
+st.markdown("""
+<head>
+<meta property="og:title" content="جنة الهانوفيل - شقق المصيف" />
+<meta property="og:description" content="شاهد أفضل الشقق المتاحة للمصيف واحجز الآن عبر واتساب!" />
+<meta property="og:image" content="https://via.placeholder.com/600x400.png?text=جنة+الهانوفيل" />
+<meta property="og:url" content="https://jannat-elhanovil-yiffnxfmnkugu4yjp48jsc.streamlit.app/" />
+</head>
+""", unsafe_allow_html=True)
+
 # ===== مجلد البيانات =====
 DATA_DIR = "data"
 IMAGE_DIR = os.path.join(DATA_DIR, "images")
