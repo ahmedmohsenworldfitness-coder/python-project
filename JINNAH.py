@@ -56,7 +56,7 @@ admin_password_input = st.sidebar.text_input("كلمة المرور (Admin)", ty
 admin_submit = st.sidebar.button("تسجيل الدخول")
 
 if admin_submit:
-    if admin_password_input == "admin123":  # عدلها لكلمة سر قوية
+    if admin_password_input == "admin123":
         st.session_state.admin_logged_in = True
         st.sidebar.success("تم تسجيل الدخول ✅")
     else:
@@ -157,28 +157,26 @@ if apartments:
         for j, apt in enumerate(apartments[i:i+3]):
             apt_id, name, details, price, rooms, image_path, video_path, status, available_from, available_to = apt
             with cols[j]:
-                # عرض الصورة
-                if image_path and os.path.exists(image_path):
-                    st.image(image_path, use_column_width=True)
-                else:
-                    st.image("https://via.placeholder.com/300x200.png?text=No+Image", use_column_width=True)
+                # البطاقة مع الصورة المصغرة
+                img_url = image_path if image_path and os.path.exists(image_path) else "https://via.placeholder.com/150"
+                st.markdown(f"""
+                <div style="border:1px solid #ddd; padding:10px; border-radius:8px; box-shadow:2px 2px 5px rgba(0,0,0,0.1); text-align:center">
+                    <h4>🏠 {name}</h4>
+                    <a href="{img_url}" target="_blank">
+                        <img src="{img_url}" style="width:150px; height:auto; border-radius:5px;"/>
+                    </a>
+                    <p>{details}</p>
+                    <p>💰 السعر: {price}</p>
+                    <p>🛏️ عدد الغرف: {rooms}</p>
+                    <p>📍 متاحة من {available_from} إلى {available_to}</p>
+                    <a href='https://wa.me/201149493002' target='_blank'>📲 احجز الآن على واتساب</a>
+                </div>
+                """, unsafe_allow_html=True)
 
-                # عرض الفيديو إذا موجود مع زر فتحه في نافذة جديدة
+                # الفيديو أسفل البطاقة
                 if video_path and os.path.exists(video_path):
                     st.video(video_path)
                     st.markdown(f"[📺 فتح الفيديو في نافذة جديدة]({video_path})", unsafe_allow_html=True)
-
-                # تفاصيل الشقة
-                st.markdown(f"""
-                <div style="border:1px solid #ddd; padding:10px; border-radius:8px; box-shadow:2px 2px 5px rgba(0,0,0,0.1)">
-                <h4>🏠 {name}</h4>
-                <p>{details}</p>
-                <p>💰 السعر: {price}</p>
-                <p>🛏️ عدد الغرف: {rooms}</p>
-                <p>📍 متاحة من {available_from} إلى {available_to}</p>
-                <a href='https://wa.me/201149493002' target='_blank'>📲 احجز الآن على واتساب</a>
-                </div>
-                """, unsafe_allow_html=True)
 else:
     st.warning("لا توجد شقق متاحة حالياً.")
 
