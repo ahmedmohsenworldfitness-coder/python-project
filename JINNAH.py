@@ -157,10 +157,18 @@ if apartments:
         for j, apt in enumerate(apartments[i:i+3]):
             apt_id, name, details, price, rooms, image_path, video_path, status, available_from, available_to = apt
             with cols[j]:
+                # عرض الصورة
                 if image_path and os.path.exists(image_path):
                     st.image(image_path, use_column_width=True)
                 else:
                     st.image("https://via.placeholder.com/300x200.png?text=No+Image", use_column_width=True)
+
+                # عرض الفيديو إذا موجود مع زر فتحه في نافذة جديدة
+                if video_path and os.path.exists(video_path):
+                    st.video(video_path)
+                    st.markdown(f"[📺 فتح الفيديو في نافذة جديدة]({video_path})", unsafe_allow_html=True)
+
+                # تفاصيل الشقة
                 st.markdown(f"""
                 <div style="border:1px solid #ddd; padding:10px; border-radius:8px; box-shadow:2px 2px 5px rgba(0,0,0,0.1)">
                 <h4>🏠 {name}</h4>
