@@ -13,7 +13,7 @@ st.markdown("""
 <head>
 <meta property="og:title" content="جنة الهانوفيل - شقق المصيف" />
 <meta property="og:description" content="شاهد أفضل الشقق المتاحة للمصيف واحجز الآن عبر واتساب!" />
-<meta property="og:image" content="https://via.placeholder.com/600x400.png?text=جنة+الهانوفيل" />
+<meta property="og:image" content="https://pngimg.com/uploads/sea/sea_PNG22.png?text=جنة+الهانوفيل" />
 <meta property="og:url" content="https://jannat-elhanovil-yiffnxfmnkugu4yjp48jsc.streamlit.app/" />
 </head>
 """, unsafe_allow_html=True)
@@ -186,7 +186,7 @@ if apartments:
                     <p>💰 السعر: {price}</p>
                     <p>🛏️ عدد الغرف: {rooms}</p>
                     <p>📍 متاحة من {available_from} إلى {available_to}</p>
-                    <a href='https://wa.me/201149493002' target='_blank'>📲 احجز الآن على واتساب</a>
+                    <a href='https://wa.me/201090172774' target='_blank'>📲 احجز الآن على واتساب</a>
                 </div>
                 """, unsafe_allow_html=True)
 
