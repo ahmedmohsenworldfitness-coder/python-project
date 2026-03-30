@@ -3,23 +3,23 @@ import sqlite3
 from datetime import datetime
 import os
 
+# ===== إعداد الصفحة =====
 st.set_page_config(page_title="جنة الهانوفيل", layout="wide")
 
-# ===== مجلد البيانات الدائم =====
+# ===== مجلد البيانات =====
 DATA_DIR = "data"
-os.makedirs(DATA_DIR, exist_ok=True)
 IMAGE_DIR = os.path.join(DATA_DIR, "images")
 VIDEO_DIR = os.path.join(DATA_DIR, "videos")
+os.makedirs(DATA_DIR, exist_ok=True)
 os.makedirs(IMAGE_DIR, exist_ok=True)
 os.makedirs(VIDEO_DIR, exist_ok=True)
 
 DB_PATH = os.path.join(DATA_DIR, "database.db")
 
-# ===== قاعدة البيانات =====
+# ===== إنشاء قاعدة البيانات والجداول =====
 conn = sqlite3.connect(DB_PATH, check_same_thread=False)
 c = conn.cursor()
 
-# جدول الشقق
 c.execute("""
 CREATE TABLE IF NOT EXISTS apartments (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -34,8 +34,6 @@ CREATE TABLE IF NOT EXISTS apartments (
     available_to TEXT
 )
 """)
-
-# جدول التقييمات
 c.execute("""
 CREATE TABLE IF NOT EXISTS reviews (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -92,8 +90,8 @@ if admin_submit:
         # ==== تعديل / حذف شقة ====
         st.subheader("✏️ تعديل / حذف الشقق")
         c.execute("SELECT id, name FROM apartments")
-        apartments = c.fetchall()
-        apt_options = {f"{apt[1]} (ID:{apt[0]})": apt[0] for apt in apartments}
+        apartments_list = c.fetchall()
+        apt_options = {f"{apt[1]} (ID:{apt[0]})": apt[0] for apt in apartments_list}
 
         if apt_options:
             selected_apt_name = st.selectbox("اختر الشقة للتعديل/الحذف", list(apt_options.keys()))
@@ -148,7 +146,7 @@ c.execute("SELECT * FROM apartments WHERE status='متاح'")
 apartments = c.fetchall()
 
 if apartments:
-    for i in range(0, len(apartments), 3):  # 3 بطاقات في الصف
+    for i in range(0, len(apartments), 3):
         cols = st.columns(3)
         for j, apt in enumerate(apartments[i:i+3]):
             apt_id, name, details, price, rooms, image_path, video_path, status, available_from, available_to = apt
@@ -157,10 +155,16 @@ if apartments:
                     st.image(image_path, use_column_width=True)
                 else:
                     st.image("https://via.placeholder.com/300x200.png?text=No+Image", use_column_width=True)
-                st.subheader(f"🏠 {name}")
-                st.write(f"{details}\n💰 السعر: {price}\n🛏️ عدد الغرف: {rooms}")
-                st.write(f"📍 متاحة من {available_from} إلى {available_to}")
-                st.markdown("[📲 احجز الآن على واتساب](https://wa.me/201149493002)")
+                st.markdown(f"""
+                <div style="border:1px solid #ddd; padding:10px; border-radius:8px; box-shadow:2px 2px 5px rgba(0,0,0,0.1)">
+                <h4>🏠 {name}</h4>
+                <p>{details}</p>
+                <p>💰 السعر: {price}</p>
+                <p>🛏️ عدد الغرف: {rooms}</p>
+                <p>📍 متاحة من {available_from} إلى {available_to}</p>
+                <a href='https://wa.me/201149493002' target='_blank'>📲 احجز الآن على واتساب</a>
+                </div>
+                """, unsafe_allow_html=True)
 else:
     st.warning("لا توجد شقق متاحة حالياً.")
 
