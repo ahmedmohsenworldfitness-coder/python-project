@@ -54,7 +54,7 @@ admin_password_input = st.sidebar.text_input("كلمة المرور (Admin)", ty
 admin_submit = st.sidebar.button("تسجيل الدخول")
 
 if admin_submit:
-    if admin_password_input == "admin123":  # غيرها حسب رغبتك
+    if admin_password_input == "admin123":  # غيرها لكلمة سر قوية
         st.sidebar.success("تم تسجيل الدخول ✅")
         st.title("💼 إدارة الشقق")
 
