@@ -5,8 +5,18 @@ import os
 
 st.set_page_config(page_title="جنة الهانوفيل", layout="wide")
 
+# ===== مجلد البيانات الدائم =====
+DATA_DIR = "data"
+os.makedirs(DATA_DIR, exist_ok=True)
+IMAGE_DIR = os.path.join(DATA_DIR, "images")
+VIDEO_DIR = os.path.join(DATA_DIR, "videos")
+os.makedirs(IMAGE_DIR, exist_ok=True)
+os.makedirs(VIDEO_DIR, exist_ok=True)
+
+DB_PATH = os.path.join(DATA_DIR, "database.db")
+
 # ===== قاعدة البيانات =====
-conn = sqlite3.connect("database.db", check_same_thread=False)
+conn = sqlite3.connect(DB_PATH, check_same_thread=False)
 c = conn.cursor()
 
 # جدول الشقق
@@ -63,10 +73,8 @@ if admin_submit:
             submit_add = st.form_submit_button("إضافة الشقة")
 
         if submit_add and name:
-            os.makedirs("images", exist_ok=True)
-            os.makedirs("videos", exist_ok=True)
-            image_path = f"images/{name.replace(' ','_')}.jpg" if image_file else ""
-            video_path = f"videos/{name.replace(' ','_')}.mp4" if video_file else ""
+            image_path = os.path.join(IMAGE_DIR, f"{name.replace(' ','_')}.jpg") if image_file else ""
+            video_path = os.path.join(VIDEO_DIR, f"{name.replace(' ','_')}.mp4") if video_file else ""
             if image_file:
                 with open(image_path, "wb") as f:
                     f.write(image_file.getbuffer())
@@ -110,11 +118,11 @@ if admin_submit:
                 image_path_edit = apt_data[5]
                 video_path_edit = apt_data[6]
                 if image_file_edit:
-                    image_path_edit = f"images/{name_edit.replace(' ','_')}.jpg"
+                    image_path_edit = os.path.join(IMAGE_DIR, f"{name_edit.replace(' ','_')}.jpg")
                     with open(image_path_edit, "wb") as f:
                         f.write(image_file_edit.getbuffer())
                 if video_file_edit:
-                    video_path_edit = f"videos/{name_edit.replace(' ','_')}.mp4"
+                    video_path_edit = os.path.join(VIDEO_DIR, f"{name_edit.replace(' ','_')}.mp4")
                     with open(video_path_edit, "wb") as f:
                         f.write(video_file_edit.getbuffer())
                 c.execute("""UPDATE apartments SET name=?, details=?, price=?, rooms=?,
@@ -140,8 +148,7 @@ c.execute("SELECT * FROM apartments WHERE status='متاح'")
 apartments = c.fetchall()
 
 if apartments:
-    # عرض كل شقة كـ بطاقة
-    for i in range(0, len(apartments), 3):  # 3 بطاقات في صف
+    for i in range(0, len(apartments), 3):  # 3 بطاقات في الصف
         cols = st.columns(3)
         for j, apt in enumerate(apartments[i:i+3]):
             apt_id, name, details, price, rooms, image_path, video_path, status, available_from, available_to = apt
