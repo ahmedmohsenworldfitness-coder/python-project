@@ -2,6 +2,7 @@ import streamlit as st
 import sqlite3
 from datetime import datetime
 import os
+import base64
 
 # ===== إعداد الصفحة =====
 st.set_page_config(page_title="جنة الهانوفيل", layout="wide")
@@ -157,14 +158,19 @@ if apartments:
         for j, apt in enumerate(apartments[i:i+3]):
             apt_id, name, details, price, rooms, image_path, video_path, status, available_from, available_to = apt
             with cols[j]:
-                # البطاقة مع الصورة المصغرة
-                img_url = image_path if image_path and os.path.exists(image_path) else "https://via.placeholder.com/150"
+                # البطاقة مع الصورة المصغرة + Base64
+                if image_path and os.path.exists(image_path):
+                    with open(image_path, "rb") as img_file:
+                        img_bytes = img_file.read()
+                        encoded = base64.b64encode(img_bytes).decode()
+                    img_tag = f'<img src="data:image/jpeg;base64,{encoded}" style="width:150px; height:auto; border-radius:5px; cursor:pointer;" onclick="window.open(this.src)">'
+                else:
+                    img_tag = '<img src="https://via.placeholder.com/150" style="width:150px; height:auto; border-radius:5px;">'
+
                 st.markdown(f"""
                 <div style="border:1px solid #ddd; padding:10px; border-radius:8px; box-shadow:2px 2px 5px rgba(0,0,0,0.1); text-align:center">
                     <h4>🏠 {name}</h4>
-                    <a href="{img_url}" target="_blank">
-                        <img src="{img_url}" style="width:150px; height:auto; border-radius:5px;"/>
-                    </a>
+                    {img_tag}
                     <p>{details}</p>
                     <p>💰 السعر: {price}</p>
                     <p>🛏️ عدد الغرف: {rooms}</p>
